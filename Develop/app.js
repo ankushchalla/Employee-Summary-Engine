@@ -10,9 +10,11 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
+/*
+  getEmployeeInfo is an async process since its completion depends on the user answering the prompt.
+  This function returns a new Employee object corresponding to the user's prompt answers, as a well
+  as a boolean indicating whether another series of prompts will be displayed to the or not.
+*/
 function getEmployeeInfo() {
     return new Promise(resolve => {
         const genQuestions = [
@@ -54,8 +56,8 @@ function getEmployeeInfo() {
                             choices: ['Yes', 'No']
                         }
                     ];
-                    inquirer.prompt(man).then(managerResponse => {
-                        resolve([managerResponse.again === 'Yes', new Manager(response.name, response.ID, response.email, managerResponse.officeNumber)]);
+                    inquirer.prompt(man).then(answer => {
+                        resolve([answer.again === 'Yes', new Manager(response.name, response.ID, response.email, answer.officeNumber)]);
                     });
                     break;
                 case "Engineer":
@@ -72,8 +74,8 @@ function getEmployeeInfo() {
                             choices: ['Yes', 'No']
                         }
                     ];
-                    inquirer.prompt(eng).then(engineerResponse => {
-                        resolve([engineerResponse.again === 'Yes' ,new Engineer(response.name, response.ID, response.email, engineerResponse.github)]);
+                    inquirer.prompt(eng).then(answer => {
+                        resolve([answer.again === 'Yes', new Engineer(response.name, response.ID, response.email, answer.github)]);
                     });
                     break;
                 case "Intern":
@@ -90,8 +92,8 @@ function getEmployeeInfo() {
                             choices: ['Yes', 'No']
                         }
                     ];
-                    inquirer.prompt(intern).then(internResponse => {
-                        resolve(internResponse.again === 'Yes' ,[new Intern(response.name, response.ID, response.email, internResponse.school)]);
+                    inquirer.prompt(intern).then(answer => {
+                        resolve(answer.again === 'Yes', [new Intern(response.name, response.ID, response.email, answer.school)]);
                     });
                     break;
             }
@@ -109,19 +111,13 @@ async function main() {
             runPrompt = false;
         }
     }
-    console.log(employees);
+    let html = render(employees);
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        console.log("Error");
+        fs.mkdirSync(OUTPUT_DIR);
+    }
+    fs.writeFile(outputPath, html, () => {});
 }
 
 main();
-
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
 
