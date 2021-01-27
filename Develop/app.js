@@ -93,7 +93,7 @@ function getEmployeeInfo() {
                         }
                     ];
                     inquirer.prompt(intern).then(answer => {
-                        resolve(answer.again === 'Yes', [new Intern(response.name, response.ID, response.email, answer.school)]);
+                        resolve([answer.again === 'Yes', new Intern(response.name, response.ID, response.email, answer.school)]);
                     });
                     break;
             }
@@ -113,7 +113,6 @@ async function main() {
     }
     let html = render(employees);
     if (!fs.existsSync(OUTPUT_DIR)) {
-        console.log("Error");
         fs.mkdirSync(OUTPUT_DIR);
     }
     fs.writeFile(outputPath, html, () => {});
