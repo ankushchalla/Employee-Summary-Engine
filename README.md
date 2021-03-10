@@ -1,5 +1,8 @@
 # Employee-Summary-Engine
 
+## Description
+The Employee-Summary-Engine allows you to keep track of all of your employees. It takes information such as name, role, and email and displays this info inside an html webpage.
+
 ## Installation 
 * Folders: lib, templates
 * Node modules: inquirer
